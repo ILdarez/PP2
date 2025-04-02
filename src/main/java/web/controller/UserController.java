@@ -11,8 +11,12 @@ import web.service.UserService;
 
 @Controller
 public class UserController {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/")
     public String showAllUsers(Model model) {
@@ -26,15 +30,13 @@ public class UserController {
             @RequestParam("lastname") String lastName,
             @RequestParam("age") Integer age) {
 
-        User user = new User(name, lastName, age);
-        userService.save(user);
+        userService.save(new User(name, lastName, age));
         return "redirect:/";
     }
 
     @GetMapping("/editUser")
     public String editUser(@RequestParam("id") Long id, Model model) {
-        User user = userService.getUserById(id);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.getUserById(id));
         return "editUser";
     }
 
@@ -45,22 +47,13 @@ public class UserController {
             @RequestParam("lastname") String lastName,
             @RequestParam("age") Integer age) {
 
-        User user = userService.getUserById(id);
-        if (user != null) {
-            user.setName(name);
-            user.setLastName(lastName);
-            user.setAge(age);
-            userService.update(user);
-        }
+        userService.update(id, name, lastName, age);
         return "redirect:/";
     }
 
     @GetMapping("/deleteUser")
     public String deleteUser(@RequestParam("id") Long id) {
-        User user = userService.getUserById(id);
-        if (user != null) {
-            userService.delete(user);
-        }
+        userService.delete(id);
         return "redirect:/";
     }
 }

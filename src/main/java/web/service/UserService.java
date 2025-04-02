@@ -1,5 +1,6 @@
 package web.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import web.model.User;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface UserService {
 
     void save(User user);
 
-    void update(User user);
+    void update(Long id, String name, String lastname, Integer age);
 
-    void delete(User user);
+    void delete(Long id);
 }
